@@ -1,7 +1,9 @@
 package com.example.instaclone_java;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,9 +13,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -26,6 +35,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
+
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +53,8 @@ public class RegisterActivity extends AppCompatActivity {
         //getting instance of Firebase
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
+
+        progressDialog = new ProgressDialog(this);
 
         //already register button clicked
         alreadyReg.setOnClickListener(new View.OnClickListener() {
@@ -65,11 +78,56 @@ public class RegisterActivity extends AppCompatActivity {
                 if(TextUtils.isEmpty(txtUsername) || TextUtils.isEmpty(txtName) || TextUtils.isEmpty(txtEmail) || TextUtils.isEmpty(txtPassword)){
                     Toast.makeText(RegisterActivity.this,"Make sure no field is empty",Toast.LENGTH_SHORT).show();
                 } else if(txtPassword.length() <6){
-                    Toast.makeText(RegisterActivity.this, "Password must be at least 6 character long", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Password must be at least 6 characters long", Toast.LENGTH_SHORT).show();
                 }else{
                     //register user
-                    registerUser(String txtUsername,String txtEmail,String txtPassword,String txtName);
+                    registerUser(txtUsername, txtEmail, txtPassword, txtName);
+
                 }
+            }
+        });
+    }
+
+    private void registerUser(String userName, String email, String password, String name){
+        //show progress
+        progressDialog.setMessage("Please wait");
+        progressDialog.show();
+
+        firebaseAuth.createUserWithEmailAndPassword(email,password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+                progressDialog.dismiss();
+                //if successfully registered then we want to save the user to our database
+                //firebase saves data in map form
+                HashMap<String,Object> myMap = new HashMap<>();
+                myMap.put("userName",userName);
+                myMap.put("name",name);
+                myMap.put("email",email);
+                myMap.put("password",password);
+                myMap.put("id",firebaseAuth.getCurrentUser().getUid());
+
+                databaseReference.child("Users").child(firebaseAuth.getCurrentUser().getUid()).setValue(myMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        //when inserting to database completes:
+                        if(task.isSuccessful()){
+                            Toast.makeText(RegisterActivity.this, "Registration successfull", Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(RegisterActivity.this,MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent );
+                            finish(); // so that when user comes to back button he doesn't come back to register activity again
+                        }
+                    }
+                });
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressDialog.dismiss();
+
+                Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
