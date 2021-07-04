@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorWhite"
+    android:gravity="center"
+    android:padding="25dp"
+    tools:context=".RegisterActivity">
+
+
+    <ImageView
+        android:id="@+id/registerLogo"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:src="@drawable/logo"
+        android:layout_marginBottom="25dp"
+        />
+
+    <EditText
+        android:id="@+id/usernameId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Username"
+        android:inputType="textPersonName"
+        android:background="@drawable/edit_text_bg"
+        android:layout_marginBottom="16dp"
+        android:padding="12dp" />
+
+    <EditText
+        android:id="@+id/nameId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Name"
+        android:inputType="textPersonName"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/edit_text_bg"
+        android:padding="12dp" />
+
+    <EditText
+        android:id="@+id/emailId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="textPersonName"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/edit_text_bg"
+        android:padding="12dp" />
+
+    <EditText
+        android:id="@+id/passwordId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPersonName"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/edit_text_bg"
+        android:padding="12dp" />
+
+</LinearLayout>
