@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:src="@drawable/logo"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="45dp"
         />
 
     <EditText
@@ -62,5 +62,23 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/edit_text_bg"
         android:padding="12dp" />
+
+    <Button
+        android:id="@+id/registerBtnId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:textAllCaps="false"
+        android:backgroundTint="@color/colorPrimary"
+        android:paddingVertical="14dp"/>
+
+    <TextView
+        android:id="@+id/alreadyregId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Already registered? Sign in"
+        android:layout_marginTop="10dp"
+        android:textAlignment="center"/>
+
 
 </LinearLayout>
